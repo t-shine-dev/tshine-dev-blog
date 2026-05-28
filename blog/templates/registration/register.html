@@ -1,0 +1,55 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}Sign Up — TShine Dev Blog ⭐{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+    <div class="auth-box">
+        <div class="auth-card">
+            <div class="auth-card-top">
+                <div class="auth-logo">
+                    <span class="auth-logo-star">⭐</span>
+                    <span class="auth-logo-t">TShine</span>
+                    <span class="auth-logo-d">Dev</span>
+                    <span class="auth-logo-b">Blog</span>
+                </div>
+                <h4 class="auth-title">Create your account</h4>
+                <p class="auth-sub">Join thousands of developers writing and learning</p>
+            </div>
+            <div class="auth-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    {% for field in form %}
+                    <div class="mb-3">
+                        <label class="auth-label">{{ field.label }}</label>
+                        {% if field.field.widget.input_type == 'password' %}
+                        <div class="auth-input-wrap">
+                            <input type="password" name="{{ field.html_name }}" id="{{ field.id_for_label }}"
+                                   class="auth-input" placeholder="{{ field.label }}"
+                                   {% if field.field.required %}required{% endif %} style="padding-right:2.5rem;">
+                            <button type="button" class="auth-eye-btn" onclick="togglePwd('{{ field.id_for_label }}',this)"><i class="bi bi-eye"></i></button>
+                        </div>
+                        {% else %}
+                        <input type="{{ field.field.widget.input_type }}" name="{{ field.html_name }}" id="{{ field.id_for_label }}"
+                               class="auth-input" placeholder="{{ field.label }}"
+                               {% if field.field.required %}required{% endif %}>
+                        {% endif %}
+                        {% if field.errors %}<div class="auth-error mt-1 py-1" style="font-size:.75rem;">{% for e in field.errors %}{{ e }}{% endfor %}</div>{% endif %}
+                        {% if field.help_text %}<div class="auth-help">{{ field.help_text }}</div>{% endif %}
+                    </div>
+                    {% endfor %}
+                    <button type="submit" class="btn-auth mt-1"><i class="bi bi-rocket me-2"></i>Create Account</button>
+                </form>
+            </div>
+            <div class="auth-foot">Already have an account? <a href="{% url 'login' %}">Login</a></div>
+        </div>
+    </div>
+</div>
+<script>
+function togglePwd(id, btn) {
+    const inp = document.getElementById(id);
+    inp.type = inp.type === 'password' ? 'text' : 'password';
+    btn.innerHTML = inp.type === 'password' ? '<i class="bi bi-eye"></i>' : '<i class="bi bi-eye-slash"></i>';
+}
+</script>
+{% endblock %}

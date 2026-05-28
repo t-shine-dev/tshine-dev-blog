@@ -1,0 +1,51 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block title %}Login — TShine Dev Blog ⭐{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+    <div class="auth-box">
+        <div class="auth-card">
+            <div class="auth-card-top">
+                <div class="auth-logo">
+                    <span class="auth-logo-star">⭐</span>
+                    <span class="auth-logo-t">TShine</span>
+                    <span class="auth-logo-d">Dev</span>
+                    <span class="auth-logo-b">Blog</span>
+                </div>
+                <h4 class="auth-title">Welcome back!</h4>
+                <p class="auth-sub">Sign in to continue writing and sharing</p>
+            </div>
+            <div class="auth-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    {% if form.non_field_errors %}
+                    <div class="auth-error"><i class="bi bi-exclamation-circle me-1"></i>{{ form.non_field_errors }}</div>
+                    {% endif %}
+                    <div class="mb-3">
+                        <label class="auth-label">Username</label>
+                        <input type="text" name="username" class="auth-input" placeholder="Your username" autofocus required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="auth-label">Password</label>
+                        <div class="auth-input-wrap">
+                            <input type="password" name="password" id="loginPwd" class="auth-input" placeholder="••••••••" required style="padding-right:2.5rem;">
+                            <button type="button" class="auth-eye-btn" onclick="togglePwd('loginPwd',this)"><i class="bi bi-eye"></i></button>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-auth"><i class="bi bi-box-arrow-in-right me-2"></i>Login</button>
+                </form>
+            </div>
+            <div class="auth-foot">Don't have an account? <a href="{% url 'register' %}">Sign up free</a></div>
+        </div>
+    </div>
+</div>
+<script>
+function togglePwd(id, btn) {
+    const inp = document.getElementById(id);
+    inp.type = inp.type === 'password' ? 'text' : 'password';
+    btn.innerHTML = inp.type === 'password' ? '<i class="bi bi-eye"></i>' : '<i class="bi bi-eye-slash"></i>';
+}
+</script>
+{% endblock %}

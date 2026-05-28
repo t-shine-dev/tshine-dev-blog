@@ -1,0 +1,215 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+{% block title %}TShine Dev Blog ⭐ — Python, Django & Web Dev{% endblock %}
+
+{% block content %}
+
+<!-- Hero -->
+<section class="hero">
+    <div class="hero-bg-grid"></div>
+    <div class="hero-glow-1"></div>
+    <div class="hero-glow-2"></div>
+    <div class="container hero-content">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6">
+                <div class="hero-badge">
+                    <span>⭐</span> Developer Knowledge Hub
+                </div>
+                <h1 class="hero-title">
+                    Build. Deploy.<br>
+                    <span class="hero-highlight">Backend System.</span>
+                </h1>
+                <p class="hero-sub">
+                    Practical backend development tutorials, Django projects, APIs, databases and software engineering insights for developers.
+                </p>
+                <div class="hero-actions">
+                    <a href="{% url 'search' %}" class="btn-primary-brand">
+                        <i class="bi bi-compass"></i> Explore Backend Articles
+                    </a>
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'create_post' %}" class="btn-ghost-brand">
+                        <i class="bi bi-pencil-square"></i> Write Article
+                    </a>
+                    {% else %}
+                    <a href="{% url 'register' %}" class="btn-ghost-brand">
+                        <i class="bi bi-rocket"></i> Start Writing Free
+                    </a>
+                    {% endif %}
+                </div>
+                <div class="hero-stats">
+                    <div>
+                        <div class="hero-stat-num">{{ page_obj.paginator.count }}+</div>
+                        <div class="hero-stat-label">Articles</div>
+                    </div>
+                    <div>
+                        <div class="hero-stat-num">{{ categories_with_colors|length }}</div>
+                        <div class="hero-stat-label">Topics</div>
+                    </div>
+                    <div>
+                        <div class="hero-stat-num">100%</div>
+                        <div class="hero-stat-label">Free</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 d-none d-lg-block">
+                <div class="hero-code-window">
+                    <div class="code-titlebar">
+                        <span class="code-dot code-dot-r"></span>
+                        <span class="code-dot code-dot-y"></span>
+                        <span class="code-dot code-dot-g"></span>
+                        <span class="code-filename">tshine_blog/views.py</span>
+                    </div>
+                    <div class="code-body">
+<span class="code-comment"># TShine Dev Blog ⭐</span>
+<span class="code-keyword">from</span> <span class="code-fn">django</span><span class="code-keyword">.db</span> <span class="code-keyword">import</span> models
+
+<span class="code-keyword">class</span> <span class="code-fn">BlogPost</span>(models.Model):
+    title = models.<span class="code-fn">CharField</span>(
+        max_length=<span class="code-num">200</span>
+    )
+    content = models.<span class="code-fn">TextField</span>()
+    author = models.<span class="code-fn">ForeignKey</span>(
+        <span class="code-string">'User'</span>, on_delete=models.<span class="code-var">CASCADE</span>
+    )
+    published = models.<span class="code-fn">BooleanField</span>(
+        default=<span class="code-var">True</span>
+    )
+    <span class="code-keyword">def</span> <span class="code-fn">__str__</span>(<span class="code-var">self</span>):
+        <span class="code-keyword">return</span> <span class="code-var">self</span>.title<span class="code-blink">▋</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container py-5">
+
+    <!-- Categories -->
+    {% if categories_with_colors %}
+    <section class="mb-5">
+        <div class="mb-3">
+            <div class="section-eyebrow">Backend Topics</div>
+            <h2 class="section-heading">Development Categories</h2>
+        </div>
+        <div class="row g-3">
+            {% for cat, color in categories_with_colors %}
+            {% with icons="bi-code-slash bi-cpu bi-braces bi-database bi-cloud bi-shield-lock bi-graph-up bi-terminal" %}
+            {% with icon_list=icons.split %}
+            <div class="col-6 col-sm-4 col-md-3 col-xl-2">
+                <a href="{{ cat.get_absolute_url }}" class="category-chip chip-{{ color }} text-decoration-none">
+                    <span class="cat-chip-icon">
+                        <i class="bi bi-code-slash"></i>
+                    </span>
+                    <div>
+                        <span class="cat-chip-name">{{ cat.name }}</span>
+                        <span class="cat-chip-count">{{ cat.posts.count }} post{{ cat.posts.count|pluralize }}</span>
+                    </div>
+                </a>
+            </div>
+            {% endwith %}{% endwith %}
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- Latest Posts -->
+    <section>
+        <div class="d-flex justify-content-between align-items-end mb-4">
+            <div>
+                <div class="section-eyebrow">Fresh Content</div>
+                <h2 class="section-heading mb-0">Latest Posts</h2>
+            </div>
+            {% if user.is_authenticated %}
+            <a href="{% url 'create_post' %}" class="btn btn-primary btn-sm">
+                <i class="bi bi-plus-lg me-1"></i>New Post
+            </a>
+            {% endif %}
+        </div>
+
+        {% if page_obj.object_list %}
+        <div class="row g-4">
+            {% for post in page_obj %}
+            {% with bgs="bg-purple bg-amber bg-green bg-blue bg-red" %}
+            {% with bg_list=bgs.split %}
+            <div class="col-md-6 col-lg-4">
+                <div class="post-card h-100">
+                    <a href="{{ post.get_absolute_url }}" class="card-img-wrap">
+                        {% if post.cover_image %}
+                        <img src="{{ post.cover_image.url }}" class="card-img" alt="{{ post.title }}" loading="lazy">
+                        {% else %}
+                        <div class="card-no-img bg-purple">
+                            <i class="bi bi-file-earmark-code"></i>
+                        </div>
+                        {% endif %}
+                    </a>
+                    <div class="card-body">
+                        {% if post.category %}
+                        <a href="{{ post.category.get_absolute_url }}" class="card-cat">{{ post.category.name }}</a>
+                        {% endif %}
+                        <h5 class="card-title">
+                            <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+                        </h5>
+                        <p class="card-excerpt">{{ post.get_excerpt|truncatechars:115 }}</p>
+                    </div>
+                    <div class="card-footer">
+                        <div class="card-author">
+                            <span class="av av-sm">{{ post.author.username|slice:":1"|upper }}</span>
+                            <div>
+                                <a href="{% url 'author_posts' post.author.username %}" class="card-author-name">{{ post.author.get_full_name|default:post.author.username }}</a>
+                                <div class="card-date">{{ post.published_at|date:"M d, Y" }}</div>
+                            </div>
+                        </div>
+                        <div class="card-meta">
+                            <span class="card-meta-item" title="Read time"><i class="bi bi-clock"></i>{{ post.read_time }}m</span>
+                            <span class="card-meta-item" title="Views"><i class="bi bi-eye"></i>{{ post.views }}</span>
+                            <span class="card-meta-item" title="Comments"><i class="bi bi-chat"></i>{{ post.comments.count }}</span>
+                            {% if user.is_authenticated %}
+                            <a href="{% url 'toggle_bookmark' post.slug %}"
+                               class="bm-btn {% if post.id in user_bookmarks %}bookmarked{% endif %}"
+                               title="{% if post.id in user_bookmarks %}Remove bookmark{% else %}Save post{% endif %}">
+                                <i class="bi bi-bookmark{% if post.id in user_bookmarks %}-fill{% endif %}"></i>
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endwith %}{% endwith %}
+            {% endfor %}
+        </div>
+
+        {% if page_obj.has_other_pages %}
+        <nav class="mt-5 d-flex justify-content-center">
+            <ul class="pagination gap-1">
+                {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}"><i class="bi bi-chevron-left"></i></a></li>
+                {% endif %}
+                {% for num in page_obj.paginator.page_range %}
+                <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                </li>
+                {% endfor %}
+                {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}"><i class="bi bi-chevron-right"></i></a></li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+
+        {% else %}
+        <div class="empty-state py-5">
+            <i class="bi bi-journal-code"></i>
+            <h5 class="mb-2">No posts published yet</h5>
+            <p class="text-muted small">Share backend ideas, projects and developer insights.</p>
+            {% if user.is_authenticated %}
+            <a href="{% url 'create_post' %}" class="btn btn-primary mt-2">Write the first post</a>
+            {% else %}
+            <a href="{% url 'register' %}" class="btn btn-primary mt-2">Join and start writing</a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </section>
+
+</div>
+{% endblock %}

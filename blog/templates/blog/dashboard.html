@@ -1,0 +1,176 @@
+{% extends 'blog/base.html' %}
+{% block title %}Dashboard — TShine Dev Blog ⭐{% endblock %}
+
+{% block content %}
+<div class="dash-layout">
+
+    <!-- Sidebar -->
+    <aside class="dash-side">
+        <div class="dash-side-inner">
+            <div class="dash-user-block">
+                <span class="av av-lg">{{ user.username|slice:":1"|upper }}</span>
+                <div>
+                    <div class="dash-username">{{ user.get_full_name|default:user.username }}</div>
+                    <div class="dash-handle">@{{ user.username }}</div>
+                </div>
+            </div>
+            <nav class="dash-nav">
+                <a href="{% url 'dashboard' %}" class="dash-nav-link active">
+                    <i class="bi bi-speedometer2"></i><span>Dashboard</span>
+                </a>
+                <a href="{% url 'author_posts' user.username %}" class="dash-nav-link">
+                    <i class="bi bi-journal-text"></i><span>My Posts</span>
+                </a>
+                <a href="{% url 'create_post' %}" class="dash-nav-link">
+                    <i class="bi bi-plus-circle"></i><span>Write Post</span>
+                </a>
+                <a href="{% url 'bookmarks' %}" class="dash-nav-link">
+                    <i class="bi bi-bookmark-star"></i><span>Bookmarks</span>
+                </a>
+                <a href="#comments-section" class="dash-nav-link">
+                    <i class="bi bi-chat-dots"></i><span>Comments</span>
+                </a>
+                <div class="dash-nav-sep"></div>
+                <a href="{% url 'home' %}" class="dash-nav-link">
+                    <i class="bi bi-house"></i><span>View Blog</span>
+                </a>
+                <form method="POST" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="dash-nav-link text-danger-link">
+                        <i class="bi bi-box-arrow-right"></i><span>Logout</span>
+                    </button>
+                </form>
+            </nav>
+        </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="dash-main">
+        <div class="dash-topbar">
+            <div>
+                <h3 class="mb-0 fw-bold" style="font-size:1.4rem;">Dashboard</h3>
+                <p class="text-muted small mb-0">Welcome back, <strong>{{ user.get_full_name|default:user.username }}</strong> 👋</p>
+            </div>
+            <a href="{% url 'create_post' %}" class="btn btn-primary btn-sm">
+                <i class="bi bi-plus-lg me-1"></i>New Post
+            </a>
+        </div>
+
+        <!-- Stats -->
+        <div class="row g-3 mb-4">
+            <div class="col-6 col-md-3">
+                <div class="stat-card sc-purple">
+                    <div class="stat-num" data-target="{{ published_count }}">0</div>
+                    <div class="stat-lbl">Published</div>
+                    <a href="{% url 'author_posts' user.username %}" class="stat-sub small">View all →</a>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-card sc-green">
+                    <div class="stat-num" data-target="{{ total_comments }}">0</div>
+                    <div class="stat-lbl">Comments</div>
+                    <span class="stat-sub small">On your posts</span>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-card sc-blue">
+                    <div class="stat-num" data-target="{{ total_views }}">0</div>
+                    <div class="stat-lbl">Total Views</div>
+                    <span class="stat-sub small">All-time</span>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-card sc-amber">
+                    <div class="stat-num" data-target="{{ bookmark_count }}">0</div>
+                    <div class="stat-lbl">Bookmarks</div>
+                    <a href="{% url 'bookmarks' %}" class="stat-sub small">View saved →</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- Posts table -->
+            <div class="col-lg-7">
+                <div class="dash-card">
+                    <div class="dash-card-hdr">
+                        <h6>Recent Posts</h6>
+                        <a href="{% url 'create_post' %}" class="btn btn-primary btn-sm"><i class="bi bi-plus-lg me-1"></i>New</a>
+                    </div>
+                    {% if posts %}
+                    <div class="table-responsive">
+                        <table class="table dash-tbl mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Status</th>
+                                    <th>Views</th>
+                                    <th class="text-end">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for post in posts %}
+                                <tr>
+                                    <td style="max-width:200px;">
+                                        <a href="{{ post.get_absolute_url }}" class="fw-semibold text-decoration-none" style="color:var(--text);font-size:.85rem;">{{ post.title|truncatechars:40 }}</a>
+                                        <div class="text-muted" style="font-size:.7rem;">{{ post.created_at|date:"M d, Y" }}</div>
+                                    </td>
+                                    <td>
+                                        {% if post.status == 'published' %}
+                                        <span class="status-pub">Published</span>
+                                        {% else %}
+                                        <span class="status-dft">Draft</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-muted small">{{ post.views }}</td>
+                                    <td class="text-end">
+                                        <a href="{% url 'edit_post' post.slug %}" class="ic-btn" title="Edit"><i class="bi bi-pencil"></i></a>
+                                        <a href="{% url 'delete_post' post.slug %}" class="ic-btn ic-btn-del" title="Delete"><i class="bi bi-trash"></i></a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="empty-state py-4">
+                        <i class="bi bi-journal-code"></i>
+                        <p class="small">No posts yet. <a href="{% url 'create_post' %}">Write your first!</a></p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Comments -->
+            <div class="col-lg-5" id="comments-section">
+                <div class="dash-card h-100">
+                    <div class="dash-card-hdr">
+                        <h6>Recent Comments</h6>
+                    </div>
+                    {% if recent_comments %}
+                    {% for comment in recent_comments %}
+                    <div class="dash-comment-row">
+                        <span class="av av-sm flex-shrink-0">{{ comment.name|slice:":1"|upper }}</span>
+                        <div class="flex-grow-1 ms-2" style="min-width:0;">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <span class="fw-semibold small">{{ comment.name }}</span>
+                                <span class="text-muted flex-shrink-0 ms-2" style="font-size:.7rem;">{{ comment.created_at|date:"M d" }}</span>
+                            </div>
+                            <p class="mb-0 text-muted" style="font-size:.8rem;line-height:1.4;">{{ comment.body|truncatechars:60 }}</p>
+                            <a href="{{ comment.post.get_absolute_url }}#comments" class="text-muted" style="font-size:.72rem;">
+                                on {{ comment.post.title|truncatechars:28 }}
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    <div class="empty-state py-4">
+                        <i class="bi bi-chat"></i>
+                        <p class="small">No comments yet</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends 'blog/base.html' %}
+{% block title %}Search{% if query %}: {{ query }}{% endif %} — Blogify{% endblock %}
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-6">
+            <h3 class="section-title text-center mb-4">Search Posts</h3>
+            <form method="GET" action="{% url 'search' %}">
+                <div class="input-group input-group-lg shadow-sm">
+                    <input class="form-control" type="search" name="q" placeholder="Search by title, tag, category…" value="{{ query }}" autofocus>
+                    <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i></button>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% if query %}
+    <p class="text-muted mb-4">
+        {% if page_obj.paginator.count %}{{ page_obj.paginator.count }} result{{ page_obj.paginator.count|pluralize }} for "<strong>{{ query }}</strong>"
+        {% else %}No results for "<strong>{{ query }}</strong>"{% endif %}
+    </p>
+    {% if page_obj.object_list %}
+    <div class="row g-4">
+        {% for post in page_obj %}
+        <div class="col-md-6 col-lg-4">
+            <div class="post-card h-100">
+                <a href="{{ post.get_absolute_url }}" class="post-card-img-link">
+                    {% if post.cover_image %}<img src="{{ post.cover_image.url }}" class="post-card-img" alt="{{ post.title }}">
+                    {% else %}<div class="post-card-img-placeholder"><i class="bi bi-file-earmark-text"></i></div>{% endif %}
+                </a>
+                <div class="post-card-body">
+                    {% if post.category %}<a href="{{ post.category.get_absolute_url }}" class="post-cat-label">{{ post.category.name }}</a>{% endif %}
+                    <h5 class="post-card-title"><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h5>
+                    <p class="post-card-excerpt">{{ post.get_excerpt|truncatechars:100 }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% include 'blog/pagination.html' %}
+    {% endif %}
+    {% endif %}
+</div>
+{% endblock %}

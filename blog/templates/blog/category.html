@@ -1,0 +1,40 @@
+{% extends 'blog/base.html' %}
+{% block title %}{{ category.name }} — Blogify{% endblock %}
+{% block content %}
+<div class="container py-5">
+    <div class="mb-4">
+        <a href="{% url 'home' %}" class="text-muted text-decoration-none small"><i class="bi bi-arrow-left me-1"></i>Home</a>
+        <h3 class="mt-2 mb-0"><i class="bi bi-folder-fill text-primary me-2"></i>{{ category.name }}</h3>
+        {% if category.description %}<p class="text-muted">{{ category.description }}</p>{% endif %}
+    </div>
+    {% if page_obj.object_list %}
+    <div class="row g-4">
+        {% for post in page_obj %}
+        <div class="col-md-6 col-lg-4">
+            <div class="post-card h-100">
+                <a href="{{ post.get_absolute_url }}" class="post-card-img-link">
+                    {% if post.cover_image %}<img src="{{ post.cover_image.url }}" class="post-card-img" alt="{{ post.title }}">
+                    {% else %}<div class="post-card-img-placeholder"><i class="bi bi-file-earmark-text"></i></div>{% endif %}
+                </a>
+                <div class="post-card-body">
+                    <h5 class="post-card-title"><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h5>
+                    <p class="post-card-excerpt">{{ post.get_excerpt|truncatechars:100 }}</p>
+                </div>
+                <div class="post-card-footer">
+                    <span class="author-avatar-sm">{{ post.author.username|slice:":1"|upper }}</span>
+                    <div class="ms-2">
+                        <a href="{% url 'author_posts' post.author.username %}" class="author-name">{{ post.author.get_full_name|default:post.author.username }}</a>
+                        <div class="post-date">{{ post.published_at|date:"M d, Y" }}</div>
+                    </div>
+                    <span class="post-meta-item ms-auto"><i class="bi bi-clock"></i> {{ post.read_time }}m</span>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% include 'blog/pagination.html' %}
+    {% else %}
+    <div class="empty-state"><i class="bi bi-folder-x"></i><p>No posts in this category yet.</p></div>
+    {% endif %}
+</div>
+{% endblock %}

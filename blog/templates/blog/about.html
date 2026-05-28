@@ -1,0 +1,68 @@
+{% extends 'blog/base.html' %}
+{% block title %}About — TShine Dev Blog ⭐{% endblock %}
+
+{% block content %}
+<div class="page-header-section">
+    <div class="container">
+        <div class="hero-badge d-inline-flex mb-3" style="animation:none;opacity:1;">⭐ About the Blog</div>
+        <h1 class="page-header-title">TShine Dev Blog</h1>
+        <p class="page-header-sub">A developer knowledge hub for Python, Django & modern web development</p>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="content-card mb-4">
+                <h4 class="mb-3 fw-bold">Our Mission ⭐</h4>
+                <p>TShine Dev Blog exists to make complex development topics accessible — whether you're learning Python for the first time, building APIs with Django, or levelling up your JavaScript skills.</p>
+                <p>Every post is crafted to be practical, clear, and worth your time. No fluff, no padding — just developer-to-developer knowledge sharing.</p>
+
+                <h5 class="mt-4 mb-3 fw-bold">What you'll find here</h5>
+                <ul class="feature-list" style="list-style:none;padding:0;">
+                    <li class="py-2"><i class="bi bi-check-circle-fill text-primary me-2"></i>In-depth Django and Python tutorials</li>
+                    <li class="py-2"><i class="bi bi-check-circle-fill text-primary me-2"></i>JavaScript and frontend deep dives</li>
+                    <li class="py-2"><i class="bi bi-check-circle-fill text-primary me-2"></i>REST API design and best practices</li>
+                    <li class="py-2"><i class="bi bi-check-circle-fill text-primary me-2"></i>Database, Git and DevOps tips</li>
+                    <li class="py-2"><i class="bi bi-check-circle-fill text-primary me-2"></i>Real project walkthroughs from start to finish</li>
+                    <li class="py-2"><i class="bi bi-check-circle-fill text-primary me-2"></i>Community posts from guest writers</li>
+                </ul>
+
+                <div class="d-flex gap-3 mt-4 flex-wrap">
+                    {% if not user.is_authenticated %}
+                    <a href="{% url 'register' %}" class="btn btn-primary"><i class="bi bi-rocket me-1"></i>Join Free</a>
+                    <a href="{% url 'home' %}" class="btn btn-outline-secondary">Browse Posts</a>
+                    {% else %}
+                    <a href="{% url 'create_post' %}" class="btn btn-primary"><i class="bi bi-pencil-square me-1"></i>Write a Post</a>
+                    <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">Dashboard</a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <div class="content-card text-center">
+                        <div style="font-size:2rem;color:var(--primary);margin-bottom:.5rem;">⚡</div>
+                        <h6 class="fw-bold">Fast & Practical</h6>
+                        <p class="text-muted small mb-0">Every tutorial gets straight to the code</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="content-card text-center">
+                        <div style="font-size:2rem;color:var(--accent);margin-bottom:.5rem;">⭐</div>
+                        <h6 class="fw-bold">Quality First</h6>
+                        <p class="text-muted small mb-0">Thoroughly researched and tested content</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="content-card text-center">
+                        <div style="font-size:2rem;color:var(--green);margin-bottom:.5rem;">🤝</div>
+                        <h6 class="fw-bold">Open Community</h6>
+                        <p class="text-muted small mb-0">Anyone can write and share knowledge</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

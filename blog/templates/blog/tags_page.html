@@ -1,0 +1,19 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}All Tags — Blogify{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h3 class="section-title mb-4">All Tags</h3>
+    <div class="d-flex flex-wrap gap-2">
+        {% for tag in tags %}
+        <a href="{{ tag.get_absolute_url }}" class="tag-pill tag-lg">
+            <i class="bi bi-hash"></i>{{ tag.name }}
+            <span class="tag-count">{{ tag.posts.count }}</span>
+        </a>
+        {% empty %}
+        <p class="text-muted">No tags yet.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

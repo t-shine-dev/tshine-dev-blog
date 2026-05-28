@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}TShine Dev Blog ⭐{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Merriweather:wght@400;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'blog/style.css' %}">
+</head>
+<body>
+
+<!-- Page Loader -->
+<div id="page-loader">
+    <div class="loader-brand">⭐ TShine Dev Blog</div>
+    <div class="loader-bar"><div class="loader-bar-inner"></div></div>
+</div>
+
+<!-- Reading Progress -->
+<div id="reading-progress"></div>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg site-navbar">
+    <div class="container">
+        <a class="navbar-brand logo" href="{% url 'home' %}">
+            <span class="logo-star">⭐</span>
+            <span class="logo-tshine">TShine</span>
+            <span class="logo-dev">Dev</span>
+            <span class="logo-blog">Blog</span>
+        </a>
+
+        <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="mainNav">
+            <ul class="navbar-nav me-auto ms-3">
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">Home</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Backend Topics</a>
+                    <ul class="dropdown-menu">
+                        {% load blog_extras %}{% get_categories as nav_cats %}
+                        {% for cat in nav_cats %}
+                        <li><a class="dropdown-item" href="{{ cat.get_absolute_url }}"><i class="bi bi-folder text-primary"></i>{{ cat.name }}</a></li>
+                        {% empty %}
+                        <li><span class="dropdown-item text-muted small">No categories yet</span></li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'tags_page' %}">Technologies</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'about' %}">About</a></li>
+            </ul>
+
+            <!-- Search -->
+            <form class="search-wrap me-2 d-none d-lg-block" method="GET" action="{% url 'search' %}">
+                <input class="search-input-nav" type="search" name="q" placeholder="Search posts…" value="{{ request.GET.q }}">
+                <button class="search-icon-btn" type="submit"><i class="bi bi-search"></i></button>
+            </form>
+
+            <!-- Theme toggle -->
+            <button class="nav-icon-btn me-2" id="themeToggle" title="Toggle dark mode">
+                <i class="bi bi-moon-fill" id="themeIcon"></i>
+            </button>
+
+            {% if user.is_authenticated %}
+            <a href="{% url 'create_post' %}" class="btn btn-outline-primary btn-sm me-2 d-none d-lg-inline-flex align-items-center gap-1">
+                <i class="bi bi-plus-lg"></i>Write
+            </a>
+            <div class="dropdown">
+                <button class="nav-avatar-btn dropdown-toggle" data-bs-toggle="dropdown">
+                    <span class="nav-avatar">{{ user.username|slice:":1"|upper }}</span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end" style="min-width:220px;">
+                    <li class="px-3 py-2">
+                        <div class="fw-bold small text-truncate">{{ user.get_full_name|default:user.username }}</div>
+                        <div class="text-muted" style="font-size:.73rem;">@{{ user.username }}</div>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="{% url 'dashboard' %}"><i class="bi bi-speedometer2 text-primary"></i>Dashboard</a></li>
+                    <li><a class="dropdown-item" href="{% url 'create_post' %}"><i class="bi bi-plus-circle text-success"></i>Create Post</a></li>
+                    <li><a class="dropdown-item" href="{% url 'bookmarks' %}"><i class="bi bi-bookmark text-warning"></i>Bookmarks</a></li>
+                    <li><a class="dropdown-item" href="{% url 'author_posts' user.username %}"><i class="bi bi-person text-info"></i>My Posts</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                        <form method="POST" action="{% url 'logout' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="dropdown-item text-danger"><i class="bi bi-box-arrow-right"></i>Logout</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+            {% else %}
+            <a href="{% url 'login' %}" class="btn btn-outline-secondary btn-sm me-2">Login</a>
+            <a href="{% url 'register' %}" class="btn btn-primary btn-sm">Sign Up Free</a>
+            {% endif %}
+        </div>
+    </div>
+</nav>
+
+{% if messages %}
+<div class="container mt-3">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% block content %}{% endblock %}
+
+<!-- Footer -->
+<footer class="site-footer">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <div class="footer-logo">
+                    <span class="footer-star">⭐</span>
+                    <span style="color:#C4B5FD;">TShine</span>
+                    <span style="color:var(--accent);">Dev</span>
+                    <span style="color:#4A4265;">Blog</span>
+                </div>
+                <p class="footer-tagline mt-2">A developer blog for sharing tutorials, insights, and deep dives into web development, Python, and modern tooling.</p>
+                <div class="d-flex gap-2 mt-3 flex-wrap">
+                    <span class="footer-tag"><i class="bi bi-code-slash"></i>Python</span>
+                    <span class="footer-tag"><i class="bi bi-gear"></i>Django</span>
+                    <span class="footer-tag"><i class="bi bi-braces"></i>JavaScript</span>
+                </div>
+            </div>
+            <div class="col-6 col-lg-2 offset-lg-1">
+                <div class="footer-heading">Navigate</div>
+                <a href="{% url 'home' %}" class="footer-link">Home</a>
+                <a href="{% url 'search' %}" class="footer-link">Explore Posts</a>
+                <a href="{% url 'tags_page' %}" class="footer-link">All Tags</a>
+                <a href="{% url 'about' %}" class="footer-link">About</a>
+            </div>
+            <div class="col-6 col-lg-2">
+                <div class="footer-heading">Account</div>
+                {% if user.is_authenticated %}
+                <a href="{% url 'dashboard' %}" class="footer-link">Dashboard</a>
+                <a href="{% url 'create_post' %}" class="footer-link">Write a Post</a>
+                <a href="{% url 'bookmarks' %}" class="footer-link">Bookmarks</a>
+                {% else %}
+                <a href="{% url 'register' %}" class="footer-link">Sign Up Free</a>
+                <a href="{% url 'login' %}" class="footer-link">Login</a>
+                {% endif %}
+            </div>
+            <div class="col-lg-3">
+                <div class="footer-heading">Write with Us</div>
+                <p style="color:#4A4265;font-size:.83rem;line-height:1.6;">Have something to share? Join TShine Dev Blog and publish your first post today.</p>
+                {% if not user.is_authenticated %}
+                <a href="{% url 'register' %}" class="btn btn-primary btn-sm mt-1">Start Writing</a>
+                {% else %}
+                <a href="{% url 'create_post' %}" class="btn btn-primary btn-sm mt-1"><i class="bi bi-plus-lg me-1"></i>New Post</a>
+                {% endif %}
+            </div>
+        </div>
+        <hr class="footer-divider">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
+            <p class="footer-copy mb-0">© 2026 <span style="color:#6B5F8A;">TShine Dev Blog</span> ⭐ — Built with Django & Bootstrap 5</p>
+            <p class="footer-copy mb-0">Made with <span class="footer-star">♥</span> for developers</p>
+        </div>
+    </div>
+</footer>
+
+<!-- Back to Top -->
+<button id="back-to-top" title="Back to top"><i class="bi bi-chevron-up"></i></button>
+
+<div class="toast-tray"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{% static 'blog/main.js' %}"></script>
+</body>
+</html>
