@@ -7,7 +7,11 @@ SECRET_KEY = os.environ.get('BLOG_SECRET_KEY', 'django-insecure-blog-change-in-p
 
 DEBUG = os.environ.get('BLOG_DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'localhost',
+    'tshine-dev-blog.onrender.com',
+]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
