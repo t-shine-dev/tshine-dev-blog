@@ -394,9 +394,9 @@ img { max-width: 100%; }
 }
 .category-chip:hover { transform: translateY(-3px); box-shadow: var(--shadow); border-color: transparent; }
 .category-chip:hover::before { opacity: 1; }
-.category-chip:hover .cat-chip-name { color: white; }
-.category-chip:hover .cat-chip-count { color: rgba(255,255,255,0.7); }
-.category-chip:hover .cat-chip-icon { background: rgba(255,255,255,0.2); color: white; }
+.category-chip:hover .cat-chip-name { color: #8E34EA; }
+.category-chip:hover .cat-chip-count { color: #4B5563; }
+.category-chip:hover .cat-chip-icon { background: rgba(29, 27, 27, 0.08); color: #2e4472; }
 .cat-chip-icon {
     width: 36px; height: 36px; border-radius: 8px;
     display: flex; align-items: center; justify-content: center;
