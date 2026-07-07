@@ -20,7 +20,7 @@ The project demonstrates backend development concepts including user authenticat
 
 ### Creator Dashboard
 
-![Creator Dashboard](screenshots/dashboard.png)
+![Dashboard Screenshot](screenshots/dashboard.png)
 
 ---
 
