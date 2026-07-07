@@ -5,7 +5,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get('BLOG_SECRET_KEY', 'django-insecure-blog-change-in-production')
 
-DEBUG = os.environ.get('BLOG_DEBUG', 'True') == 'True'
+DEBUG = os.environ.get('BLOG_DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = [
     '127.0.0.1',

@@ -1,99 +1,156 @@
-# Django Blog
+# TShine Dev Blog 🌟
 
-A full-stack blog application built with Django that provides a clean reading experience for visitors and a secure administration dashboard for managing blog content.
+A full-stack blog application built with Django that provides a clean, modern reading experience for developers and a secure administration dashboard for managing blog content.
 
-The project demonstrates backend development concepts including authentication, database management, media handling, static file configuration, and production deployment.
-
----
-
-## Live Demo
-
-🌐 **Website:** https://temitopeolawuyi.pythonanywhere.com/
+The project demonstrates backend development concepts including user authentication, database management, media upload handling, custom CSS styling, static file optimization, and production deployment.
 
 ---
 
-## Features
+## 🚀 Live Demo
 
-* User registration and authentication
-* Secure administrator dashboard
-* Create, read, update, and delete blog posts (CRUD)
-* Image upload and media management
-* Responsive user interface
-* Static and media file handling
-* Production-ready configuration using WhiteNoise
-* Organized project structure following Django best practices
+🌐 Website: https://temitopeolawuyi.pythonanywhere.com/
 
 ---
 
-## Built With
+## 📸 Preview
+
+### Homepage
+
+![Homepage Screenshot](screenshots/homepage.png)
+
+### Creator Dashboard
+
+![Creator Dashboard](screenshots/dashboard.png)
+
+---
+
+## ✨ Features
+
+### 🔐 User Authentication & Security
+
+* User registration and login system
+* Secure session-based authentication
+* Protected dashboard access
+
+### 📝 Blog Management (CRUD)
+
+* Create blog posts
+* Read published articles
+* Update existing posts
+* Delete posts
+
+### 🖼️ Media Management
+
+* Image uploads for blog articles
+* Media file handling and storage
+
+### 📱 Responsive Design
+
+* Clean user interface
+* Responsive layout across different screen sizes
+* Custom CSS styling
+
+### ⚙️ Production Configuration
+
+* Static file management using WhiteNoise
+* Optimized static file serving
+* Production-ready Django configuration
+* Deployment on PythonAnywhere
+
+---
+
+## 🖥️ Creator Dashboard
+
+The administration dashboard provides content creators with a dedicated space to manage blog posts and maintain website content efficiently.
+
+---
+
+## 🛠️ Built With
+
+### Backend
 
 * Python
-* Django
+* Django 6.0+
+
+### Frontend
+
 * HTML5
 * CSS3
 * JavaScript
-* SQLite
+
+### Database
+
+* SQLite (Development)
+
+### Production Tools
+
 * WhiteNoise
-* Gunicorn
+* PythonAnywhere Deployment
 
 ---
 
-## Installation
+# 📦 Installation
 
-### Clone the repository
+## 1. Clone the repository
 
 ```bash
 git clone https://github.com/t-shine-dev/tshine-dev-blog.git
 ```
 
-### Navigate to the project
+## 2. Navigate into the project directory
 
 ```bash
 cd tshine-dev-blog
 ```
 
-### Create a virtual environment
+## 3. Create a virtual environment
 
 ```bash
 python -m venv venv
 ```
 
-### Activate the virtual environment
+## 4. Activate the virtual environment
 
-**Windows**
+### Windows
 
 ```bash
 venv\Scripts\activate
 ```
 
-### Install dependencies
+## 5. Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### Create environment variables
+## 6. Configure environment variables
 
-Create a `.env` file and add:
+Create a `.env` file in the project root:
 
 ```env
 BLOG_SECRET_KEY=your-secret-key
 BLOG_DEBUG=True
 ```
 
-### Apply migrations
+For production:
+
+```env
+BLOG_DEBUG=False
+```
+
+## 7. Apply database migrations
 
 ```bash
 python manage.py migrate
 ```
 
-### Create an administrator account
+## 8. Create an administrator account
 
 ```bash
 python manage.py createsuperuser
 ```
 
-### Run the development server
+## 9. Run the development server
 
 ```bash
 python manage.py runserver
@@ -107,34 +164,38 @@ http://127.0.0.1:8000/
 
 ---
 
-## Deployment
+# 🌍 Deployment
 
-The project is deployed using:
+The application is deployed on PythonAnywhere with:
 
-* PythonAnywhere
-* WhiteNoise for static files
 * Production Django settings
+* WhiteNoise for optimized static file serving
+* Secure `DEBUG=False` configuration
 * Git-based deployment workflow
 
 ---
 
-## Project Structure
+# 📂 Project Structure
 
 ```
 tshine-dev-blog/
 │
-├── blog/
-├── blog_project/
-├── media/
-├── staticfiles/
-├── manage.py
-├── requirements.txt
-└── README.md
+├── blog/                    # Blog application (models, views, templates, URLs)
+├── blog_project/            # Django project configuration
+│   ├── settings.py
+│   ├── urls.py
+│   └── wsgi.py
+│
+├── media/                   # Uploaded images and media files
+├── staticfiles/             # Collected production static files
+├── manage.py                # Django management script
+├── requirements.txt         # Project dependencies
+└── README.md                # Documentation
 ```
 
 ---
 
-## Author
+# 👤 Author
 
 **Temitope Olawuyi**
 
@@ -146,6 +207,6 @@ Frontend & Backend Developer
 
 ---
 
-## License
+# 📄 License
 
 This project is licensed under the MIT License.
